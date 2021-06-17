@@ -2,7 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
-const path = require('path')
+const path = require('path');
+const {router} = require('autoTweet');
 require('dotenv').config();
 
 const middlewares = require('./middlewares');
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
+app.use(router);
 
 const port = process.env.PORT || 2020;
 app.listen(port, () => {
