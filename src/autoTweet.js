@@ -12,6 +12,7 @@ const twitterClient = new TwitterClient({
 router.post('/postTweet', async (req, res) => {
     try {
         const tweet = req.body;
+        console.log(`Requested to tweet: ${tweet}`);
         await TweetHandler(tweet);
     } catch (error) {
         next(error);
@@ -22,6 +23,7 @@ router.post('/postTweet', async (req, res) => {
 async function TweetHandler(tweet){
     try {
         await twitterClient.tweets.statusesUpdate(tweet);
+        console.log(`Tweeted: ${tweet}`);
     } catch (error) {
         console.log(error);
     }
