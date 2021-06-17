@@ -2,11 +2,22 @@
   "name": "notetweet-scheduler",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "Christian Bager Bach Houmann <christian@bagerbach.com> (https://bagerbach.com)",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "axios": "0.21.1",
+    "cors": "2.8.5",
+    "dotenv": "10.0.0",
+    "express": "4.17.1",
+    "helmet": "4.6.0",
+    "morgan": "1.10.0",
+    "node-schedule": "2.0.0",
+    "nodemon": "2.0.7",
+    "twitter-api-client": "1.3.8"
+  }
 }
