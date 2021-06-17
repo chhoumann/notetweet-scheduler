@@ -16,7 +16,8 @@ app.use(cors({
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname + '/views/index.html'))
+    res.sendFile(path.join(__dirname + '/views/index.html'));
+    res.json("{message: '📔🐦 at work.'}");
 });
 
 app.use(middlewares.notFound);
