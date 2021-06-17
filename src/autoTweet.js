@@ -3,10 +3,10 @@ const { Router } = require('express');
 const router = Router();
 
 const twitterClient = new TwitterClient({
-            apiKey: process.env.twitterAPIKey,
-            apiSecret: process.env.twitterAPISecret,
-            accessToken: process.env.twitterAccessToken,
-            accessTokenSecret: process.env.twitterAccessTokenSecret,
+            apiKey: process.env.API_KEY,
+            apiSecret: process.env.API_SECRET,
+            accessToken: process.env.ACCESS_TOKEN,
+            accessTokenSecret: process.env.ACCESS_SECRET,
         });
 
 router.post('/postTweet', async (req, res) => {
