@@ -4,6 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
+    "start": "npm install && nodemon src/index.js",
     "dev": "nodemon src/index.js"
   },
   "keywords": [],
