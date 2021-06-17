@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
-const {router} = require('autoTweet');
+const {router} = require('./autoTweet.js');
 require('dotenv').config();
 
 const middlewares = require('./middlewares');

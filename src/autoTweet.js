@@ -1,4 +1,4 @@
-const TwitterClient = require('twitter-api-client');
+const {TwitterClient} = require('twitter-api-client');
 const { Router } = require('express');
 const router = Router();
 
