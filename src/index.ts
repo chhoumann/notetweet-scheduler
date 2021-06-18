@@ -29,7 +29,8 @@ app.post('/postTweet', async (req: Request, res: Response) => {
     const date = new Date(2021, 6, 18, 15, 2, 30);
     const schedule = require('node-schedule');
     const job = schedule.scheduleJob(date, async () => {
-        await autoTweetApi.TweetHandler(req.body.tweet);
+        const test = await autoTweetApi.TweetHandler(req.body.tweet);
+        console.log("test:", test);
     });
 
     res.send({date});
