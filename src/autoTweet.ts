@@ -8,7 +8,11 @@ const twitterClient = new TwitterClient({
             accessTokenSecret: process.env.ACCESS_SECRET,
         });
 
-async function TweetHandler(tweet: string){
+async function TweetHandler(tweet: string) {
+    console.log(process.env.API_KEY);
+    console.log(process.env.API_SECRET);
+    console.log(process.env.ACCESS_TOKEN);
+    console.log(process.env.ACCESS_SECRET);
     try {
         const tweeted = await twitterClient.tweets.statusesUpdate(tweet);
         console.log(`Tweeted: ${tweet}`);
