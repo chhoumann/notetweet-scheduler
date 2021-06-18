@@ -1,11 +1,11 @@
 const {TwitterClient} = require('twitter-api-client');
-const { Router } = require('express');
 
-const twitterClient = () => new TwitterClient({
-            apiKey: process.env.API_KEY,
-            apiSecret: process.env.API_SECRET,
-            accessToken: process.env.ACCESS_TOKEN,
-            accessTokenSecret: process.env.ACCESS_SECRET,
+// @ts-ignore
+const twitterClient = () => new TwitterClient({// @ts-ignore
+            apiKey: process.env.API_KEY.trim(), // @ts-ignore
+            apiSecret: process.env.API_SECRET.trim(),// @ts-ignore
+            accessToken: process.env.ACCESS_TOKEN.trim(),// @ts-ignore
+            accessTokenSecret: process.env.ACCESS_SECRET.trim(),
         });
 
 async function TweetHandler(tweet: string) {
