@@ -19,15 +19,15 @@ app.get('/', (req, res) => {
     res.json("{message: '📔🐦 at work.'}");
 });
 
-app.use(middlewares.notFound);
-app.use(middlewares.errorHandler);
-
 app.post('/postTweet', async (req, res) => {
-    console.log(req.body);
+    console.log(req);
     await autoTweetApi.TweetHandler(req.body);
 
-    res.sendStatus(200);
+    res.send("Thanks!");
 })
+
+app.use(middlewares.notFound);
+app.use(middlewares.errorHandler);
 
 const port = process.env.PORT || 2020;
 app.listen(port, () => {
