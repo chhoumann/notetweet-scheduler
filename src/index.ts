@@ -36,7 +36,14 @@ app.post('/postTweetNow', async (req: Request, res: Response) => {
         return;
     }
 
+    const {date, tweet} = req.body;
+    if (!date || !tweet) {
+        res.send({success: false, error: "date or tweet invalid"});
+        return;
+    }
 
+    const newTweet: ITweet = new Tweet(tweet.id, tweet.content, date);
+    await autoTweetApi.TweetHandler(newTweet);
 
     res.send({success: true});
 });
@@ -60,7 +67,7 @@ app.post("/scheduleTweet", async (req: Request, res: Response) => {
     const job = schedule.scheduleJob(date, async () => {
         await autoTweetApi.TweetHandler(newTweet);
     });
-    console.log(`Success: ${job}`);
+    console.log(`Success:`, job);
 
     res.send({success: true});
 });
