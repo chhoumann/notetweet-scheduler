@@ -7,6 +7,7 @@ const cors = require('cors');
 const path = require('path');
 const autoTweetApi = require('./autoTweet.js');
 const bodyParser = require('body-parser');
+const schedule = require('node-schedule');
 require('dotenv').config();
 
 const middlewares = require('./middlewares');
@@ -26,14 +27,16 @@ app.get('/', (req: Request, res: Response) => {
 
 app.post('/postTweet', async (req: Request, res: Response) => {
     console.log(req.body.password === process.env.PASSWORD);
-    const date = new Date(2021, 6, 18, 15, 2, 30);
-    const schedule = require('node-schedule');
-    const job = schedule.scheduleJob(date, async () => {
+    const rule = new schedule.RecurrenceRule();
+    rule.second = 10;
+
+    const job = schedule.scheduleJob(rule, async () => {
         const test = await autoTweetApi.TweetHandler(req.body.tweet);
         console.log("test:", test);
     });
+    console.log(job);
 
-    res.send({date});
+    res.send({rule});
 })
 
 app.use(middlewares.notFound);
