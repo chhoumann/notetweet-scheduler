@@ -4,10 +4,15 @@ import fs from 'fs';
 export class TweetStore {
     private readonly file: string = "tweets.json";
 
+    public init(): void {
+        if (!fs.existsSync(this.file)) {
+            this.writeTweets([]);
+        }
+    }
+
     public getTweets(): ITweet[] {
         const data = fs.readFileSync(this.file)
         return JSON.parse(data.toString());
-
     }
 
     public writeTweets(tweets: ITweet[]): void {

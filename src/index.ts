@@ -28,6 +28,8 @@ app.get('/', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname + '/views/index.html'));
 });
 
+new TweetStore().init();
+
 app.post('/postTweetNow', async (req: Request, res: Response) => {
     if (req.body.password !== process.env.PASSWORD) {
         res.send({success: false, error: "wrong password"});
