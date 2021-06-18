@@ -10,8 +10,9 @@ const twitterClient = async () => new TwitterClient({// @ts-ignore
 });
 
 async function TweetHandler(tweet: ITweet) {
+    console.log("TweetHandler...")
     try {
-        const postedTweets = postTweet(tweet);
+        const postedTweets = await postTweet(tweet);
 
         console.log(`Tweeted: ${tweet}`);
 
