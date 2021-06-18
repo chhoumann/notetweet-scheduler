@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "npm run postinstall && npm run watch-node",
-    "postinstall": "tsc",
+    "postinstall": "npm install && tsc",
     "watch-node": "nodemon dist/index.js",
     "watch-ts": "tsc -w",
     "deploy": "git add . && git commit -m Heroku && git push heroku master"
