@@ -1,12 +1,12 @@
-const {TwitterClient} = require('twitter-api-client');
+import {TwitterClient} from "twitter-api-client";
 
-// @ts-ignore
-const twitterClient = () => new TwitterClient({// @ts-ignore
-            apiKey: process.env.API_KEY.trim(), // @ts-ignore
-            apiSecret: process.env.API_SECRET.trim(),// @ts-ignore
-            accessToken: process.env.ACCESS_TOKEN.trim(),// @ts-ignore
-            accessTokenSecret: process.env.ACCESS_SECRET.trim(),
-        });
+
+const twitterClient = async () => new TwitterClient({// @ts-ignore
+    apiKey: process.env.API_KEY,// @ts-ignore
+    apiSecret: process.env.API_SECRET,// @ts-ignore
+    accessToken: process.env.ACCESS_TOKEN,// @ts-ignore
+    accessTokenSecret: process.env.ACCESS_SECRET,
+});
 
 async function TweetHandler(tweet: string) {
     console.log(process.env.API_KEY);
@@ -14,9 +14,10 @@ async function TweetHandler(tweet: string) {
     console.log(process.env.ACCESS_TOKEN);
     console.log(process.env.ACCESS_SECRET);
     try {
-        const tweeted = await twitterClient().tweets.statusesUpdate(tweet);
+        const client: TwitterClient = await twitterClient();
+        const res = await client.tweets.statusesUpdate({status: tweet});
         console.log(`Tweeted: ${tweet}`);
-        return tweeted;
+        return res;
     } catch (error) {
         console.log(error);
     }
