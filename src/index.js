@@ -12,7 +12,10 @@ const app = express();
 app.use(morgan('common'));
 app.use(helmet());
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname + '/views/index.html'));
