@@ -60,7 +60,7 @@ app.post("/scheduleTweet", async (req: Request, res: Response) => {
     const job = schedule.scheduleJob(date, async () => {
         await autoTweetApi.TweetHandler(newTweet);
     });
-    console.log(`Success: ${!!job}`);
+    console.log(`Success: ${job}`);
 
     res.send({success: true});
 });
