@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
 const autoTweetApi = require('./autoTweet.js');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const middlewares = require('./middlewares');
