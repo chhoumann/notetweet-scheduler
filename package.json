@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run watch-node",
     "postinstall": "tsc --project ./",
-    "watch-node": "nodemon dist/index.js --ignore *.json",
+    "watch-node": "node dist/index.js",
     "watch-ts": "tsc -w",
     "deploy": "git add . && git commit -m Heroku && git push heroku master"
   },
