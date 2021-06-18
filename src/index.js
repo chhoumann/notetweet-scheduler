@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
-const {router} = require('./autoTweet.js');
+const autoTweetApi = require('./autoTweet.js');
 require('dotenv').config();
 
 const middlewares = require('./middlewares');
@@ -21,9 +21,20 @@ app.get('/', (req, res) => {
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
-app.use(router);
+
+app.post('/postTweet', async (req, res) => {
+    console.log(req.body);
+    await autoTweetApi.TweetHandler(req.body);
+
+    res.sendStatus(200);
+})
 
 const port = process.env.PORT || 2020;
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`);
 });
+
+const got = require('got');
+setInterval(function() {
+    got.get("http://notetweet.herokuapp.com");
+}, 300000); // every 5 minutes (300000)
