@@ -1,3 +1,5 @@
+import {Request, Response} from "express";
+
 const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
@@ -18,13 +20,12 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname + '/views/index.html'));
-    res.json("{message: '📔🐦 at work.'}");
 });
 
-app.post('/postTweet', async (req, res) => {
-    console.log(req.body);
+app.post('/postTweet', async (req: Request, res: Response) => {
+    console.log(req.body.password === process.env.PASSWORD);
     await autoTweetApi.TweetHandler(req.body);
 
     res.send("Thanks!");
@@ -40,5 +41,5 @@ app.listen(port, () => {
 
 const got = require('got');
 setInterval(function() {
-    got.get("http://notetweet.herokuapp.com");
+    got.get(process.env.ORIGIN);
 }, 300000); // Prevent the app from sleeping.

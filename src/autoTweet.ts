@@ -8,7 +8,7 @@ const twitterClient = new TwitterClient({
             accessTokenSecret: process.env.ACCESS_SECRET,
         });
 
-async function TweetHandler(tweet){
+async function TweetHandler(tweet: string){
     try {
         await twitterClient.tweets.statusesUpdate(tweet);
         console.log(`Tweeted: ${tweet}`);

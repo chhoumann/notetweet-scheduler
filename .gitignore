@@ -1,5 +1,6 @@
 ### Example user template template
 ### Example user template
+src/*.js
 
 # IntelliJ project files
 .idea
@@ -124,3 +125,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+/package-lock.json
