@@ -32,7 +32,7 @@ app.post('/postTweet', async (req: Request, res: Response) => {
         await autoTweetApi.TweetHandler(req.body.tweet);
     });
 
-    res.send("Thanks!");
+    res.send({date});
 })
 
 app.use(middlewares.notFound);
