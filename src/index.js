@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/postTweet', async (req, res) => {
-    console.log(req);
+    console.log(req.body);
     await autoTweetApi.TweetHandler(req.body);
 
     res.send("Thanks!");
@@ -37,4 +37,4 @@ app.listen(port, () => {
 const got = require('got');
 setInterval(function() {
     got.get("http://notetweet.herokuapp.com");
-}, 300000); // every 5 minutes (300000)
+}, 300000); // Prevent the app from sleeping.
