@@ -69,7 +69,10 @@ app.post("/scheduleTweet", async (req: Request, res: Response) => {
         await autoTweetApi.TweetHandler(newTweet);
     }));
 
-    console.log(`Success:`, !!scheduled[scheduled.length - 1]);
+    const time = date.getTime() - Date.now();
+    const timeout = setTimeout(async () => await autoTweetApi.TweetHandler(newTweet), time);
+
+    console.log(`Success:`, !!timeout);
 
     res.send({success: true});
 });
