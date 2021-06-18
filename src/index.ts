@@ -1,4 +1,7 @@
 import {Request, Response} from "express";
+import {TweetStore} from "./tweetStore";
+import {ITweet} from "./ITweet";
+import {Tweet} from "./Tweet";
 
 const express = require('express');
 const morgan = require('morgan');
@@ -25,15 +28,38 @@ app.get('/', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname + '/views/index.html'));
 });
 
-app.post('/postTweet', async (req: Request, res: Response) => {
-    console.log(req.body.password === process.env.PASSWORD);
+app.post('/postTweetNow', async (req: Request, res: Response) => {
+    if (req.body.password !== process.env.PASSWORD) {
+        res.send({success: false, error: "wrong password"});
+        return;
+    }
 
-    const job = schedule.scheduleJob(new Date(), async () => {
-        const test = await autoTweetApi.TweetHandler(req.body.tweet);
+
+
+    res.send({success: true});
+});
+
+app.post("/scheduleTweet", async (req: Request, res: Response) => {
+    if (req.body.password !== process.env.PASSWORD) {
+        res.send({success: false, error: "wrong password"});
+        return;
+    }
+
+    const {date, tweet} = req.body;
+    if (!date || !tweet) {
+        res.send({success: false, error: "date or tweet invalid"});
+        return;
+    }
+
+    const newTweet: ITweet = new Tweet(tweet.id, tweet.tweet, date);
+    new TweetStore().addTweet(newTweet);
+
+    schedule.scheduleJob(date, async () => {
+        await autoTweetApi.TweetHandler(req.body.tweet);
     });
 
     res.send({success: true});
-})
+});
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
