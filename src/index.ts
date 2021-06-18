@@ -53,12 +53,12 @@ app.post("/scheduleTweet", async (req: Request, res: Response) => {
         return;
     }
 
-    const newTweet: ITweet = new Tweet(tweet.id, tweet.tweet, date);
+    const newTweet: ITweet = new Tweet(tweet.id, tweet.content, date);
     new TweetStore().addTweet(newTweet);
 
-    console.log(`Scheduling ${tweet} for ${date}`);
+    console.log(`Scheduling {${newTweet.content}} for ${date}`);
     const job = schedule.scheduleJob(date, async () => {
-        await autoTweetApi.TweetHandler(req.body.tweet);
+        await autoTweetApi.TweetHandler(newTweet);
     });
     console.log(`Success: ${!!job}`);
 
