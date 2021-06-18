@@ -70,6 +70,9 @@ app.post("/scheduleTweet", async (req: Request, res: Response) => {
     }));
 
     const time = Date.parse(date) - Date.now();
+    if (time > 2147483647) {
+        res.send({success: false, error: "tweet scheduled too far in the future."});
+    }
     const timeout = setTimeout(async () => await autoTweetApi.TweetHandler(newTweet), time);
 
     console.log(`Success:`, !!timeout);
