@@ -26,7 +26,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.post('/postTweet', async (req: Request, res: Response) => {
     console.log(req.body.password === process.env.PASSWORD);
-    const date = new Date();
+    const date = new Date(2021, 6, 18, 15, 2, 30);
     const schedule = require('node-schedule');
     const job = schedule.scheduleJob(date, async () => {
         await autoTweetApi.TweetHandler(req.body.tweet);
