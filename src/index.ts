@@ -27,16 +27,12 @@ app.get('/', (req: Request, res: Response) => {
 
 app.post('/postTweet', async (req: Request, res: Response) => {
     console.log(req.body.password === process.env.PASSWORD);
-    const rule = new schedule.RecurrenceRule();
-    rule.second = 10;
 
-    const job = schedule.scheduleJob(rule, async () => {
+    const job = schedule.scheduleJob(new Date(), async () => {
         const test = await autoTweetApi.TweetHandler(req.body.tweet);
-        console.log("test:", test);
     });
-    console.log(job);
 
-    res.send({rule});
+    res.send({success: true});
 })
 
 app.use(middlewares.notFound);

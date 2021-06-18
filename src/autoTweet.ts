@@ -9,15 +9,11 @@ const twitterClient = async () => new TwitterClient({// @ts-ignore
 });
 
 async function TweetHandler(tweet: string) {
-    console.log(process.env.API_KEY);
-    console.log(process.env.API_SECRET);
-    console.log(process.env.ACCESS_TOKEN);
-    console.log(process.env.ACCESS_SECRET);
     try {
         const client: TwitterClient = await twitterClient();
-        const res = await client.tweets.statusesUpdate({status: tweet});
+        const statusesUpdate = await client.tweets.statusesUpdate({status: tweet});
         console.log(`Tweeted: ${tweet}`);
-        return res;
+        return statusesUpdate;
     } catch (error) {
         console.log(error);
     }
