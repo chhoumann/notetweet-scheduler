@@ -10,8 +10,9 @@ const twitterClient = new TwitterClient({
 
 async function TweetHandler(tweet: string){
     try {
-        await twitterClient.tweets.statusesUpdate(tweet);
+        const tweeted = await twitterClient.tweets.statusesUpdate(tweet);
         console.log(`Tweeted: ${tweet}`);
+        return tweeted;
     } catch (error) {
         console.log(error);
     }
