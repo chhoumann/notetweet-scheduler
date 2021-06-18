@@ -48,6 +48,7 @@ app.post('/postTweetNow', async (req: Request, res: Response) => {
     res.send({success: true});
 });
 
+const scheduled: any[] = [];
 app.post("/scheduleTweet", async (req: Request, res: Response) => {
     if (req.body.password !== process.env.PASSWORD) {
         res.send({success: false, error: "wrong password"});
@@ -64,10 +65,11 @@ app.post("/scheduleTweet", async (req: Request, res: Response) => {
     new TweetStore().addTweet(newTweet);
 
     console.log(`Scheduling {${newTweet.content}} for ${date}`);
-    const job = schedule.scheduleJob(date, async () => {
+    scheduled.push(schedule.scheduleJob(date, async () => {
         await autoTweetApi.TweetHandler(newTweet);
-    });
-    console.log(`Success:`, job);
+    }));
+
+    console.log(`Success:`, !!scheduled[scheduled.length - 1]);
 
     res.send({success: true});
 });
