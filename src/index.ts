@@ -72,9 +72,9 @@ function auth(req: Request, res: Response): boolean {
     const auth: string | undefined = req.get("authorization");
 
     if (typeof auth === "string") {
-        const credentials = new Buffer(<string>auth.split(" ").pop(), "base64").toString("ascii").split(":");
+        const password = Buffer.from(<string>auth.split(' ')[1], "base64").toString("ascii");
 
-        if (credentials[0] !== process.env.PASSWORD) {
+        if (password !== process.env.PASSWORD) {
             res.send({success: false, error: "wrong password"});
             return false;
         }
