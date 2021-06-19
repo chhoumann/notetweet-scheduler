@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {TweetStore} from "./tweetStore";
 import {ITweet} from "./ITweet";
 import {Tweet} from "./Tweet";
+import {CronStringStore} from "./cronStringStore";
 
 const express = require('express');
 const morgan = require('morgan');
@@ -29,6 +30,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 new TweetStore().init();
+new CronStringStore().init();
 
 app.post('/postTweetNow', async (req: Request, res: Response) => {
     if (!auth(req, res)) return;
@@ -68,6 +70,16 @@ app.get('/scheduledTweets', async (req: Request, res: Response) => {
     res.send({tweets});
 });
 
+app.post('/addCronStrings', async (req: Request, res: Response) => {
+   if (!auth(req, res)) return;
+
+   const {cronStrings} = req.body;
+   if (!cronStrings) return;
+
+   console.log("Updated cron strings.")
+   updateCronStrings(cronStrings);
+});
+
 function auth(req: Request, res: Response): boolean {
     const auth: string | undefined = req.get("authorization");
 
@@ -99,16 +111,31 @@ setInterval(function() {
     got.get(process.env.ORIGIN);
 }, 300000); // Prevent the app from sleeping.
 
-cron.schedule('*/2 * * * *', async () => {
-    const tweetStore: TweetStore = new TweetStore();
+const cronTasks: any[] = [];
 
-    const tweets = tweetStore.getTweets();
-    if (!tweets) return;
-    const tweetToPost = tweets[0];
-    if (!tweetToPost) return;
+function scheduleCronStrings() {
+    new CronStringStore().getCronStrings().forEach((str) => {
+        const task = cron.schedule(str, async () => {
+            const tweetStore: TweetStore = new TweetStore();
 
-    await autoTweetApi.TweetHandler(tweetToPost);
-    console.log(`Posted tweet\n${tweetToPost.content.join('\n')}`);
+            const tweets = tweetStore.getTweets();
+            if (!tweets) return;
+            const tweetToPost = tweets[0];
+            if (!tweetToPost) return;
 
-    tweetStore.deleteTweet(tweetToPost.id);
-});
+            await autoTweetApi.TweetHandler(tweetToPost);
+            console.log(`Posted tweet\n${tweetToPost.content.join('\n')}`);
+
+            tweetStore.deleteTweet(tweetToPost.id);
+        });
+
+        cronTasks.push(task);
+    });
+}
+
+function updateCronStrings(cronStrings: string[]) {
+    new CronStringStore().writeCronStrings(cronStrings);
+    scheduleCronStrings();
+}
+
+scheduleCronStrings();
