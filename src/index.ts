@@ -80,7 +80,7 @@ setInterval(function() {
     got.get(process.env.ORIGIN);
 }, 300000); // Prevent the app from sleeping.
 
-cron.schedule('3 * * * *', async () => {
+cron.schedule('2/* * * * *', async () => {
     const tweets = new TweetStore().getTweets();
     if (!tweets) return;
     const tweetToPost = tweets[0];
