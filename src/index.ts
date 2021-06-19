@@ -76,6 +76,7 @@ app.delete('/deleteScheduled', async (req: Request, res: Response) => {
    const {tweet} = req.body;
 
    new TweetStore().deleteTweet(tweet);
+   res.send({success: true});
 });
 
 app.post('/addCronStrings', async (req: Request, res: Response) => {
