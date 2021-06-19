@@ -68,7 +68,7 @@ app.post("/scheduleTweet", async (req: Request, res: Response) => {
 });
 
 app.get('/scheduledTweets', async (req: Request, res: Response) => {
-    console.log(req.body);
+    console.log(req.headers.authorization);
     if (req.body.password !== process.env.PASSWORD) {
         res.send({success: false, error: "wrong password"});
         return;
