@@ -1,12 +1,12 @@
 import {ITweet} from "./ITweet";
 
 export class Tweet implements ITweet {
-    ID: string;
+    id: string;
     posted: boolean;
     content: string[];
 
     constructor(id: string, tweet: string[]) {
-        this.ID = id;
+        this.id = id;
         this.content = tweet;
         this.posted = false;
     }

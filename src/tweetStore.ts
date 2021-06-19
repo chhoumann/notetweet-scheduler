@@ -32,7 +32,7 @@ export class TweetStore {
         let tweets: ITweet[] = this.getTweets();
         if (!tweets) return;
 
-        tweets = tweets.filter(tweet => tweet.ID !== tweetId);
+        tweets = tweets.filter(tweet => tweet.id !== tweetId);
         this.writeTweets(tweets);
     }
 
@@ -43,7 +43,7 @@ export class TweetStore {
 
         targetTweet = {...targetTweet, ...newData};
         const newTweets = tweets.map(tweet => {
-            if (tweet.ID === targetTweet?.ID) return targetTweet;
+            if (tweet.id === targetTweet?.id) return targetTweet;
             return tweet;
         });
 

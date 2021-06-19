@@ -91,11 +91,15 @@ setInterval(function() {
 }, 300000); // Prevent the app from sleeping.
 
 cron.schedule('*/2 * * * *', async () => {
-    const tweets = new TweetStore().getTweets();
+    const tweetStore: TweetStore = new TweetStore();
+
+    const tweets = tweetStore.getTweets();
     if (!tweets) return;
     const tweetToPost = tweets[0];
     if (!tweetToPost) return;
 
     await autoTweetApi.TweetHandler(tweetToPost);
     console.log(`Posted tweet\n${tweetToPost.content.join('\n')}`);
+
+    tweetStore.deleteTweet(tweetToPost.id);
 });

@@ -1,5 +1,5 @@
 export interface ITweet {
-    ID: string;
+    id: string;
     content: string[];
     posted: boolean;
 }
