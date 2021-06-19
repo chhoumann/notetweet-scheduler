@@ -5,12 +5,14 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "npm run watch-node",
-    "postinstall": "tsc --project ./",
+    "postinstall": "tsc --project ./ && mv -i -v src/views dist/ && rm -v -rf src",
     "watch-node": "node dist/index.js",
     "watch-ts": "tsc -w",
     "deploy": "git add . && git commit -m Heroku && git push heroku master"
   },
-  "engines": { "node": "12.16.3" },
+  "engines": {
+    "node": "12.16.3"
+  },
   "keywords": [],
   "author": "Christian Bager Bach Houmann <christian@bagerbach.com> (https://bagerbach.com)",
   "license": "MIT",
@@ -22,7 +24,7 @@
     "got": "11.8.2",
     "helmet": "4.6.0",
     "morgan": "1.10.0",
-    "node-schedule": "2.0.0",
+    "node-cron": "3.0.0",
     "nodemon": "2.0.7",
     "twitter-api-client": "1.3.8"
   },

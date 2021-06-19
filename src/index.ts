@@ -10,7 +10,7 @@ const cors = require('cors');
 const path = require('path');
 const autoTweetApi = require('./autoTweet.js');
 const bodyParser = require('body-parser');
-const schedule = require('node-schedule');
+const cron = require('node-cron');
 require('dotenv').config();
 
 const middlewares = require('./middlewares');
@@ -36,47 +36,34 @@ app.post('/postTweetNow', async (req: Request, res: Response) => {
         return;
     }
 
-    const {date, tweet} = req.body;
-    if (!date || !tweet) {
+    const {tweet} = req.body;
+    if (!tweet) {
         res.send({success: false, error: "date or tweet invalid"});
         return;
     }
 
-    const newTweet: ITweet = new Tweet(tweet.id, tweet.content, date);
+    const newTweet: ITweet = new Tweet(tweet.id, tweet.content);
     await autoTweetApi.TweetHandler(newTweet);
 
     res.send({success: true});
 });
 
-const scheduled: any[] = [];
 app.post("/scheduleTweet", async (req: Request, res: Response) => {
     if (req.body.password !== process.env.PASSWORD) {
         res.send({success: false, error: "wrong password"});
         return;
     }
 
-    const {date, tweet} = req.body;
-    if (!date || !tweet) {
-        res.send({success: false, error: "date or tweet invalid"});
+    const {tweet} = req.body;
+    if (!tweet) {
+        res.send({success: false, error: "tweet invalid"});
         return;
     }
 
-    const newTweet: ITweet = new Tweet(tweet.id, tweet.content, date);
+    const newTweet: ITweet = new Tweet(tweet.id, tweet.content);
     new TweetStore().addTweet(newTweet);
 
-    console.log(`Scheduling {${newTweet.content}} for ${date}`);
-    scheduled.push(schedule.scheduleJob(date, async () => {
-        await autoTweetApi.TweetHandler(newTweet);
-    }));
-
-    const time = Date.parse(date) - Date.now();
-    if (time >= 2147483647) {
-        res.send({success: false, error: "tweet scheduled too far in the future."});
-    }
-    const timeout = setTimeout(async () => await autoTweetApi.TweetHandler(newTweet), time);
-
-    console.log(`Success:`, !!timeout);
-
+    console.log(`Scheduling {${newTweet.content}}`);
     res.send({success: true});
 });
 
@@ -92,3 +79,13 @@ const got = require('got');
 setInterval(function() {
     got.get(process.env.ORIGIN);
 }, 300000); // Prevent the app from sleeping.
+
+cron.schedule('3 * * * *', async () => {
+    const tweets = new TweetStore().getTweets();
+    if (!tweets) return;
+    const tweetToPost = tweets[0];
+    if (!tweetToPost) return;
+
+    await autoTweetApi.TweetHandler(tweetToPost);
+    console.log(`Posted tweet\n${tweetToPost.content.join('\n')}`);
+});
