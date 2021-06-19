@@ -78,6 +78,8 @@ app.post('/addCronStrings', async (req: Request, res: Response) => {
 
    console.log("Updated cron strings.")
    updateCronStrings(cronStrings);
+
+   res.send({success: true});
 });
 
 function auth(req: Request, res: Response): boolean {
