@@ -70,9 +70,11 @@ app.get('/scheduledTweets', async (req: Request, res: Response) => {
 
 function auth(req: Request, res: Response): boolean {
     const auth: string | undefined = req.get("authorization");
+    console.log(auth)
 
     if (typeof auth === "string") {
         const password = Buffer.from(<string>auth.split(' ')[1], "base64").toString("ascii");
+        console.log(password)
 
         if (password !== process.env.PASSWORD) {
             res.send({success: false, error: "wrong password"});
