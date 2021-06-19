@@ -31,7 +31,6 @@ app.get('/', (req: Request, res: Response) => {
 new TweetStore().init();
 
 app.post('/postTweetNow', async (req: Request, res: Response) => {
-    console.log(req.body);
     if (req.body.password !== process.env.PASSWORD) {
         res.send({success: false, error: "wrong password"});
         return;
@@ -69,6 +68,7 @@ app.post("/scheduleTweet", async (req: Request, res: Response) => {
 });
 
 app.get('/scheduledTweets', async (req: Request, res: Response) => {
+    console.log(req.body);
     if (req.body.password !== process.env.PASSWORD) {
         res.send({success: false, error: "wrong password"});
         return;
