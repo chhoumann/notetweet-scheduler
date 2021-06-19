@@ -75,7 +75,7 @@ app.delete('/deleteScheduled', async (req: Request, res: Response) => {
    if (!auth(req, res)) return;
    const {tweet} = req.body;
 
-   new TweetStore().deleteTweet(tweet);
+   new TweetStore().deleteTweet(tweet.id);
    res.send({success: true});
 });
 
