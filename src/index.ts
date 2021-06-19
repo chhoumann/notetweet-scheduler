@@ -1,7 +1,5 @@
 import {Request, Response} from "express";
 import {TweetStore} from "./tweetStore";
-import {ITweet} from "./ITweet";
-import {Tweet} from "./Tweet";
 import {CronStringStore} from "./cronStringStore";
 
 const express = require('express');
@@ -12,6 +10,7 @@ const path = require('path');
 const autoTweetApi = require('./autoTweet.js');
 const bodyParser = require('body-parser');
 const cron = require('node-cron');
+const tweetRoutes = require('./tweetRoutes')
 require('dotenv').config();
 
 const middlewares = require('./middlewares');
@@ -24,6 +23,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+app.use(tweetRoutes)
 
 app.get('/', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname + '/views/index.html'));
@@ -31,83 +31,6 @@ app.get('/', (req: Request, res: Response) => {
 
 new TweetStore().init();
 new CronStringStore().init();
-
-app.post('/postTweetNow', async (req: Request, res: Response) => {
-    if (!auth(req, res)) return;
-
-    const {tweet} = req.body;
-    if (!tweet) {
-        res.send({success: false, error: "date or tweet invalid"});
-        return;
-    }
-
-    const newTweet: ITweet = new Tweet(tweet.id, tweet.content);
-    await autoTweetApi.TweetHandler(newTweet);
-
-    res.send({success: true});
-});
-
-app.post("/scheduleTweet", async (req: Request, res: Response) => {
-    if (!auth(req, res)) return;
-
-    const {tweet} = req.body;
-    if (!tweet) {
-        res.send({success: false, error: "tweet invalid"});
-        return;
-    }
-
-    const newTweet: ITweet = new Tweet(tweet.id, tweet.content);
-    new TweetStore().addTweet(newTweet);
-    console.log(newTweet);
-
-    console.log(`Scheduling {${newTweet.content}}`);
-    res.send({success: true});
-});
-
-app.get('/scheduledTweets', async (req: Request, res: Response) => {
-    if (!auth(req, res)) return;
-
-    const tweets: ITweet[] = new TweetStore().getTweets();
-    res.send({tweets});
-});
-
-app.delete('/deleteScheduled', async (req: Request, res: Response) => {
-   if (!auth(req, res)) return;
-   const {tweet} = req.body;
-
-   new TweetStore().deleteTweet(tweet.id);
-   res.send({success: true});
-});
-
-app.post('/addCronStrings', async (req: Request, res: Response) => {
-   if (!auth(req, res)) return;
-
-   const {cronStrings} = req.body;
-   if (!cronStrings) return;
-
-   console.log("Updated cron strings.")
-   updateCronStrings(cronStrings);
-
-   res.send({success: true});
-});
-
-function auth(req: Request, res: Response): boolean {
-    const auth: string | undefined = req.get("authorization");
-
-    if (typeof auth === "string") {
-        const password = Buffer.from(<string>auth.split(' ')[1], "base64").toString("ascii").substr(1);
-
-        if (password !== process.env.PASSWORD) {
-            res.send({success: false, error: "wrong password"});
-            return false;
-        }
-    } else {
-        res.send({success: false, error: "wrong password"});
-        return false;
-    }
-
-    return true;
-}
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);

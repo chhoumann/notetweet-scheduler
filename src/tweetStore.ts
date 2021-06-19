@@ -1,54 +1,28 @@
 import {ITweet} from "./ITweet";
-import fs from 'fs';
+const db = require('./db');
 
 export class TweetStore {
-    private readonly file: string = "tweets.json";
-
     public init(): void {
-        if (!fs.existsSync(this.file)) {
-            this.writeTweets([]);
-        }
+        db.query("CREATE TABLE tweets (id text primary key, content text[]);");
     }
 
     public getTweets(): ITweet[] {
-        const data = fs.readFileSync(this.file)
-        return JSON.parse(data.toString());
-    }
-
-    public writeTweets(tweets: ITweet[]): void {
-        const data = JSON.stringify(tweets);
-        fs.writeFileSync(this.file, data);
+        const result = db.query("SELECT * from tweets");
+        console.log("GetTweets:", result);
+        return result;
     }
 
     public addTweet(tweet: ITweet): void {
-        const tweets: ITweet[] = this.getTweets();
-        if (!tweets) return;
-
-        tweets.push(tweet);
-        this.writeTweets(tweets);
+        db.query(`INSERT INTO tweets (id, content) values (${tweet.id}, {${tweet.content.join(', ')}});`);
     }
 
     public deleteTweet(tweetId: string): void {
-        let tweets: ITweet[] = this.getTweets();
-        if (!tweets) return;
-
-        tweets = tweets.filter(tweet => tweet.id !== tweetId);
-        this.writeTweets(tweets);
+        db.query(`DELETE FROM tweets WHERE id = ${tweetId}`);
     }
 
     public updateTweet(tweetId: string, newData: ITweet): ITweet {
-        const tweets: ITweet[] = this.getTweets();
-        let targetTweet: ITweet | undefined = tweets.find(tweet => tweet.id === tweetId);
-        if (!targetTweet) throw new Error(`Tweet with ID: ${tweetId} not found.`);
-
-        targetTweet = {...targetTweet, ...newData};
-        const newTweets = tweets.map(tweet => {
-            if (tweet.id === targetTweet?.id) return targetTweet;
-            return tweet;
-        });
-
-        this.writeTweets(newTweets);
-        return targetTweet;
+        db.query(`UPDATE tweets SET content = ${newData.content.join(', ')} WHERE id = ${tweetId};`)
+        return newData;
     }
 }
 
