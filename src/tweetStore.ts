@@ -38,7 +38,7 @@ export class TweetStore {
 
     public updateTweet(tweetId: string, newData: ITweet): ITweet {
         const tweets: ITweet[] = this.getTweets();
-        let targetTweet: ITweet | undefined = tweets.find(tweet => tweet.ID === tweetId);
+        let targetTweet: ITweet | undefined = tweets.find(tweet => tweet.id === tweetId);
         if (!targetTweet) throw new Error(`Tweet with ID: ${tweetId} not found.`);
 
         targetTweet = {...targetTweet, ...newData};
