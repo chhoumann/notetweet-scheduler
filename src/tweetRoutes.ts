@@ -4,7 +4,6 @@ import {Request, Response} from "express";
 import {Tweet} from "./Tweet";
 
 const Router = require('express-promise-router');
-const db = require('./db.ts');
 const autoTweetApi = require('./autoTweet.js');
 
 const router = new Router();
