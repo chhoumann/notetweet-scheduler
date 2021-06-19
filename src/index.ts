@@ -67,6 +67,16 @@ app.post("/scheduleTweet", async (req: Request, res: Response) => {
     res.send({success: true});
 });
 
+app.get('/scheduledTweets', async (req: Request, res: Response) => {
+    if (req.body.password !== process.env.PASSWORD) {
+        res.send({success: false, error: "wrong password"});
+        return;
+    }
+
+    const tweets: ITweet[] = new TweetStore().getTweets();
+    res.send({tweets});
+});
+
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
 
