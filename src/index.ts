@@ -58,6 +58,7 @@ app.post("/scheduleTweet", async (req: Request, res: Response) => {
 
     const newTweet: ITweet = new Tweet(tweet.id, tweet.content);
     new TweetStore().addTweet(newTweet);
+    console.log(newTweet);
 
     console.log(`Scheduling {${newTweet.content}}`);
     res.send({success: true});
