@@ -31,10 +31,7 @@ app.get('/', (req: Request, res: Response) => {
 new TweetStore().init();
 
 app.post('/postTweetNow', async (req: Request, res: Response) => {
-    if (req.body.password !== process.env.PASSWORD) {
-        res.send({success: false, error: "wrong password"});
-        return;
-    }
+    if (!auth(req, res)) return;
 
     const {tweet} = req.body;
     if (!tweet) {
@@ -49,10 +46,7 @@ app.post('/postTweetNow', async (req: Request, res: Response) => {
 });
 
 app.post("/scheduleTweet", async (req: Request, res: Response) => {
-    if (req.body.password !== process.env.PASSWORD) {
-        res.send({success: false, error: "wrong password"});
-        return;
-    }
+    if (!auth(req, res)) return;
 
     const {tweet} = req.body;
     if (!tweet) {
@@ -68,15 +62,29 @@ app.post("/scheduleTweet", async (req: Request, res: Response) => {
 });
 
 app.get('/scheduledTweets', async (req: Request, res: Response) => {
-    console.log(req.headers.authorization);
-    if (req.headers.authorization !== process.env.PASSWORD) {
-        res.send({success: false, error: "wrong password"});
-        return;
-    }
+    if (!auth(req, res)) return;
 
     const tweets: ITweet[] = new TweetStore().getTweets();
     res.send({tweets});
 });
+
+function auth(req: Request, res: Response): boolean {
+    const auth: string | undefined = req.get("authorization");
+
+    if (typeof auth === "string") {
+        const credentials = new Buffer(<string>auth.split(" ").pop(), "base64").toString("ascii").split(":");
+
+        if (credentials[0] !== process.env.PASSWORD) {
+            res.send({success: false, error: "wrong password"});
+            return false;
+        }
+    } else {
+        res.send({success: false, error: "wrong password"});
+        return false;
+    }
+
+    return true;
+}
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
