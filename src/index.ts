@@ -65,7 +65,7 @@ cron.schedule("* * * * *", async () => {
         console.log(diff)
         const minutes = Math.floor(diff/1000/60);
         console.log(minutes)
-        if (minutes < 1) return t;
+        if (minutes >= 0) return t;
     })
     console.log("TTP:", tweetsToPost);
     if (!tweetsToPost) return;
