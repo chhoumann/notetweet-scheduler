@@ -57,10 +57,14 @@ cron.schedule("* * * * *", async () => {
     // @ts-ignore
     let tweetsToPost = tweets.filter(t => {
         const postAt: Date = new Date(t.postat);
+        console.log(postAt);
         const dateNow: Date = new Date(Date.now());
+        console.log(dateNow)
         // @ts-ignore
         const diff = Math.abs(dateNow - postAt);
+        console.log(diff)
         const minutes = Math.floor(diff/1000/60);
+        console.log(minutes)
         if (minutes < 1) return t;
     })
     console.log("TTP:", tweetsToPost);
