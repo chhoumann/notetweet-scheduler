@@ -34,7 +34,7 @@ router.post("/scheduleTweet", async (req: Request, res: Response) => {
     }
 
     const newTweet: ITweet = new Tweet(tweet.id, tweet.content);
-    await new TweetStore().addTweet(newTweet);
+    await new TweetStore().addTweet(newTweet, postAt);
     console.log(newTweet);
 
     console.log(`Scheduling {${newTweet.content}}`);

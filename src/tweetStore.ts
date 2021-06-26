@@ -11,8 +11,8 @@ export class TweetStore {
         return await db.query("SELECT * from public.tweets;");
     }
 
-    public async addTweet(tweet: ITweet): Promise<void> {
-        await db.query(`INSERT INTO public.tweets(id, content) values ($1, $2);`, [tweet.id, tweet.content]);
+    public async addTweet(tweet: ITweet, postAt: number): Promise<void> {
+        await db.query(`INSERT INTO public.tweets(id, content, postat) values ($1, $2, $3);`, [tweet.id, tweet.content, postAt]);
     }
 
     public async deleteTweet(tweetId: string): Promise<void> {
