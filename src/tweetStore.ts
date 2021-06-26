@@ -8,19 +8,19 @@ export class TweetStore {
     }
 
     public getTweets(): ITweet[] {
-        return db.query("SELECT * from tweets");
+        return db.query("SELECT * from public.tweets;");
     }
 
     public addTweet(tweet: ITweet): void {
-        db.query(`INSERT INTO tweets (id, content) values (${tweet.id}, {${tweet.content.join(', ')}});`);
+        db.query(`INSERT INTO public.tweets (id, content) values (${tweet.id}, {${tweet.content.join(', ')}});`);
     }
 
     public deleteTweet(tweetId: string): void {
-        db.query(`DELETE FROM tweets WHERE id = ${tweetId}`);
+        db.query(`DELETE FROM public.tweets WHERE id = ${tweetId}`);
     }
 
     public updateTweet(tweetId: string, newData: ITweet): ITweet {
-        db.query(`UPDATE tweets SET content = ${newData.content.join(', ')} WHERE id = ${tweetId};`)
+        db.query(`UPDATE public.tweets SET content = ${newData.content.join(', ')} WHERE id = ${tweetId};`)
         return newData;
     }
 }
