@@ -52,8 +52,9 @@ cron.schedule("* * * * *", async () => {
     const result = await tweetStore.getTweets();
     console.log("Result:", result)
     // @ts-ignore
-    const tweets: ITweet[] = JSON.parse(result.rows);
+    const tweets = JSON.parse(result.rows);
     console.log("Tweets:", tweets);
+    // @ts-ignore
     let tweetsToPost = tweets.filter(t => {
         const postAt: Date = new Date(t.postat);
         const dateNow: Date = new Date(Date.now());
@@ -62,6 +63,7 @@ cron.schedule("* * * * *", async () => {
         const minutes = Math.floor(diff/1000/60);
         if (minutes < 1) return t;
     })
+    console.log("TTP:", tweetsToPost);
     if (!tweetsToPost) return;
 
     for (const tweetToPost of tweetsToPost) {
