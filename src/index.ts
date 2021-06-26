@@ -54,6 +54,7 @@ cron.schedule("* * * * *", async () => {
     if (!result && !result.rows) return;
     // @ts-ignore
     const tweets: ITweet[] = JSON.parse(result.rows);
+    console.log(tweets);
     let tweetsToPost = tweets.filter(t => {
         const postAt: Date = new Date(t.postat);
         const dateNow: Date = new Date(Date.now());
