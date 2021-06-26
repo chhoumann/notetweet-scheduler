@@ -25,6 +25,7 @@ router.post('/postTweetNow', async (req: Request, res: Response) => {
 });
 
 router.post("/scheduleTweet", async (req: Request, res: Response) => {
+    console.log(req.body);
     if (!auth(req, res)) return;
 
     const {tweet, postAt} = req.body;

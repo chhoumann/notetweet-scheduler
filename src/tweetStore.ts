@@ -4,7 +4,7 @@ const db = require('./db');
 
 export class TweetStore {
     public async init(): Promise<void> {
-        await db.query("CREATE TABLE tweets(id text primary key, content text[], postOn integer);");
+        await db.query("CREATE TABLE tweets(id text primary key, content text[], postOn timestamp);");
     }
 
     public async getTweets(): Promise<ITweet[]> {
@@ -12,7 +12,7 @@ export class TweetStore {
     }
 
     public async addTweet(tweet: ITweet, postAt: number): Promise<void> {
-        await db.query(`INSERT INTO public.tweets(id, content, postat) values ($1, $2, $3);`, [tweet.id, tweet.content, postAt]);
+        await db.query(`INSERT INTO public.tweets(id, content, postat) values ($1, $2, to_timestamp($3 / 1000.0));`, [tweet.id, tweet.content, postAt]);
     }
 
     public async deleteTweet(tweetId: string): Promise<void> {

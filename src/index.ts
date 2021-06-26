@@ -48,9 +48,10 @@ cron.schedule("* * * * *", async () => {
 
     const tweetStore: TweetStore = new TweetStore();
 
-    const tweets = await tweetStore.getTweets();
-    if (!tweets) return;
-    const tweetToPost = tweets[0];
+    const result = await tweetStore.getTweets();
+    console.log(result);
+    if (!result) return;
+    const tweetToPost = result[0];
     if (!tweetToPost) return;
 
     await autoTweetApi.TweetHandler(tweetToPost);
