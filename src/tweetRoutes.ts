@@ -44,8 +44,8 @@ router.post("/scheduleTweet", async (req: Request, res: Response) => {
 router.get('/scheduledTweets', async (req: Request, res: Response) => {
     if (!auth(req, res)) return;
 
-    const tweets: ITweet[] = await new TweetStore().getTweets();
-    res.send(tweets);
+    const result: any = await new TweetStore().getTweets();
+    res.send(result.rows);
 });
 
 router.delete('/deleteScheduled', async (req: Request, res: Response) => {
