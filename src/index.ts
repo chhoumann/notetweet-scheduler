@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import {TweetStore} from "./tweetStore";
+import {ITweet} from "./ITweet";
 
 const express = require('express');
 const morgan = require('morgan');
@@ -49,13 +50,24 @@ cron.schedule("* * * * *", async () => {
     const tweetStore: TweetStore = new TweetStore();
 
     const result = await tweetStore.getTweets();
-    console.log(result);
-    if (!result) return;
-    const tweetToPost = result[0];
-    if (!tweetToPost) return;
+    // @ts-ignore
+    if (!result && !result.rows) return;
+    // @ts-ignore
+    const tweets: ITweet[] = JSON.parse(result.rows);
+    let tweetsToPost = tweets.filter(t => {
+        const postAt: Date = new Date(t.postat);
+        const dateNow: Date = new Date(Date.now());
+        // @ts-ignore
+        const diff = Math.abs(postAt - dateNow);
+        const minutes = Math.floor(diff/1000/60);
+        if (minutes < 1) return t;
+    })
+    if (!tweetsToPost) return;
 
-    await autoTweetApi.TweetHandler(tweetToPost);
-    console.log(`Posted tweet\n${tweetToPost.content.join('\n')}`);
+    for (const tweetToPost of tweetsToPost) {
+        await autoTweetApi.TweetHandler(tweetToPost);
+        console.log(`Posted tweet\n${tweetToPost.content.join('\n')}`);
 
-    await tweetStore.deleteTweet(tweetToPost.id);
+        await tweetStore.deleteTweet(tweetToPost.id);
+    }
 });
