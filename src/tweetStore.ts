@@ -4,7 +4,7 @@ const db = require('./db');
 
 export class TweetStore {
     public async init(): Promise<void> {
-        await db.query("CREATE TABLE tweets (id text primary key, content text[]);");
+        await db.query("CREATE TABLE tweets(id text primary key, content text[], postOn integer);");
     }
 
     public async getTweets(): Promise<ITweet[]> {
@@ -16,11 +16,11 @@ export class TweetStore {
     }
 
     public async deleteTweet(tweetId: string): Promise<void> {
-        await db.query(`DELETE FROM public.tweets WHERE id = ${tweetId}`);
+        await db.query(`DELETE FROM public.tweets WHERE id = $1`, [tweetId]);
     }
 
     public async updateTweet(tweetId: string, newData: ITweet): Promise<ITweet> {
-        await db.query(`UPDATE public.tweets SET content = ${newData.content.join(', ')} WHERE id = ${tweetId};`)
+        await db.query(`UPDATE public.tweets SET content = $1 WHERE id = $2;`, [newData.content, tweetId])
         return newData;
     }
 }
