@@ -1,4 +1,5 @@
 import {ITweet} from "./ITweet";
+
 const db = require('./db');
 
 export class TweetStore {
@@ -7,9 +8,7 @@ export class TweetStore {
     }
 
     public getTweets(): ITweet[] {
-        const result = db.query("SELECT * from tweets");
-        console.log("GetTweets:", result);
-        return result;
+        return db.query("SELECT * from tweets");
     }
 
     public addTweet(tweet: ITweet): void {
