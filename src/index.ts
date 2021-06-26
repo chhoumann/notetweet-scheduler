@@ -61,11 +61,11 @@ cron.schedule("* * * * *", async () => {
         const dateNow: Date = new Date(Date.now());
         console.log(dateNow)
         // @ts-ignore
-        const diff = Math.abs(dateNow - postAt);
+        const diff = dateNow - postAt;
         console.log(diff)
         const minutes = Math.floor(diff/1000/60);
         console.log(minutes)
-        if (minutes >= 0) return t;
+        if (minutes < 0) return t;
     })
     console.log("TTP:", tweetsToPost);
     if (!tweetsToPost) return;
