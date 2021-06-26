@@ -18,7 +18,7 @@ router.post('/postTweetNow', async (req: Request, res: Response) => {
         return;
     }
 
-    const newTweet: ITweet = new Tweet(tweet.id, tweet.content);
+    const newTweet: ITweet = new Tweet(tweet.id, tweet.content, new Date(Date.now()));
     await autoTweetApi.TweetHandler(newTweet);
 
     res.send({success: true});
@@ -34,7 +34,7 @@ router.post("/scheduleTweet", async (req: Request, res: Response) => {
         return;
     }
 
-    const newTweet: ITweet = new Tweet(tweet.id, tweet.content);
+    const newTweet: ITweet = new Tweet(tweet.id, tweet.content, new Date(postAt));
     await new TweetStore().addTweet(newTweet, postAt);
     console.log(newTweet);
 
