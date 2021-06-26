@@ -1,6 +1,5 @@
 import {Request, Response} from "express";
 import {TweetStore} from "./tweetStore";
-import {CronStringStore} from "./cronStringStore";
 
 const express = require('express');
 const morgan = require('morgan');
@@ -29,8 +28,7 @@ app.get('/', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname + '/views/index.html'));
 });
 
-new TweetStore().init();
-new CronStringStore().init();
+(async () => await new TweetStore().init())();
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
@@ -45,31 +43,18 @@ setInterval(function() {
     got.get(process.env.ORIGIN);
 }, 300000); // Prevent the app from sleeping.
 
-const cronTasks: any[] = [];
+cron.schedule("* * * * *", async () => {
+    console.log(new Date(), " - Looking for something to post.");
 
-function scheduleCronStrings() {
-    new CronStringStore().getCronStrings().forEach((str) => {
-        const task = cron.schedule(str, async () => {
-            const tweetStore: TweetStore = new TweetStore();
+    const tweetStore: TweetStore = new TweetStore();
 
-            const tweets = await tweetStore.getTweets();
-            if (!tweets) return;
-            const tweetToPost = tweets[0];
-            if (!tweetToPost) return;
+    const tweets = await tweetStore.getTweets();
+    if (!tweets) return;
+    const tweetToPost = tweets[0];
+    if (!tweetToPost) return;
 
-            await autoTweetApi.TweetHandler(tweetToPost);
-            console.log(`Posted tweet\n${tweetToPost.content.join('\n')}`);
+    await autoTweetApi.TweetHandler(tweetToPost);
+    console.log(`Posted tweet\n${tweetToPost.content.join('\n')}`);
 
-            await tweetStore.deleteTweet(tweetToPost.id);
-        });
-
-        cronTasks.push(task);
-    });
-}
-
-function updateCronStrings(cronStrings: string[]) {
-    new CronStringStore().writeCronStrings(cronStrings);
-    scheduleCronStrings();
-}
-
-scheduleCronStrings();
+    await tweetStore.deleteTweet(tweetToPost.id);
+});

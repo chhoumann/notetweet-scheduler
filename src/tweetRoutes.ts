@@ -27,14 +27,14 @@ router.post('/postTweetNow', async (req: Request, res: Response) => {
 router.post("/scheduleTweet", async (req: Request, res: Response) => {
     if (!auth(req, res)) return;
 
-    const {tweet} = req.body;
+    const {tweet, postAt} = req.body;
     if (!tweet) {
         res.send({success: false, error: "tweet invalid"});
         return;
     }
 
     const newTweet: ITweet = new Tweet(tweet.id, tweet.content);
-    new TweetStore().addTweet(newTweet);
+    await new TweetStore().addTweet(newTweet);
     console.log(newTweet);
 
     console.log(`Scheduling {${newTweet.content}}`);
@@ -53,18 +53,6 @@ router.delete('/deleteScheduled', async (req: Request, res: Response) => {
     const {tweet} = req.body;
 
     await new TweetStore().deleteTweet(tweet.id);
-    res.send({success: true});
-});
-
-router.post('/addCronStrings', async (req: Request, res: Response) => {
-    if (!auth(req, res)) return;
-
-    const {cronStrings} = req.body;
-    if (!cronStrings) return;
-
-    console.log("Updated cron strings.")
-    //updateCronStrings(cronStrings);
-
     res.send({success: true});
 });
 
