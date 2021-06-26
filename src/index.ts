@@ -52,9 +52,7 @@ cron.schedule("* * * * *", async () => {
     const result = await tweetStore.getTweets();
     console.log("Result:", !!result)
     // @ts-ignore
-    console.log(1, result.rows);
-    return;
-    const tweets = JSON.parse("");
+    const tweets = JSON.parse(result.rows);
     console.log("Tweets:", tweets);
     // @ts-ignore
     let tweetsToPost = tweets.filter(t => {
