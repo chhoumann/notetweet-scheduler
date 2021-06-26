@@ -59,7 +59,7 @@ cron.schedule("* * * * *", async () => {
         const postAt: Date = new Date(t.postat);
         const dateNow: Date = new Date(Date.now());
         // @ts-ignore
-        const diff = Math.abs(postAt - dateNow);
+        const diff = Math.abs(dateNow - postAt);
         const minutes = Math.floor(diff/1000/60);
         if (minutes < 1) return t;
     })
