@@ -36,7 +36,7 @@ app.listen(port, (err: any) => {
     if (err) {
         console.log(err);
     }
-    console.log(`Listening at ${getOrigin} on port ${port}`);
+    console.log(`Listening at ${getOrigin()} on port ${port}`);
 });
 
 (async () => await new TweetStore().init())();
