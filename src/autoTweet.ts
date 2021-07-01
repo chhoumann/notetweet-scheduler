@@ -1,7 +1,6 @@
 import {StatusesUpdate, TwitterClient} from "twitter-api-client";
 import {ITweet} from "./ITweet";
 
-
 const twitterClient = async () => new TwitterClient({// @ts-ignore
     apiKey: process.env.API_KEY,// @ts-ignore
     apiSecret: process.env.API_SECRET,// @ts-ignore

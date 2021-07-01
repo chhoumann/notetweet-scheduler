@@ -11,9 +11,11 @@ const autoTweetApi = require('./autoTweet.js');
 const bodyParser = require('body-parser');
 const cron = require('node-cron');
 const tweetRoutes = require('./tweetRoutes')
+const middlewares = require('./middlewares');
 require('dotenv').config();
 
-const middlewares = require('./middlewares');
+const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || 'localhost';
 
 const app = express();
 app.use(morgan('common'));
@@ -29,15 +31,17 @@ app.get('/', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname + '/views/index.html'));
 });
 
-(async () => await new TweetStore().init())();
-
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
 
-const port = process.env.PORT || 2020;
-app.listen(port, () => {
-    console.log(`Listening at http://localhost:${port}`);
+app.listen(PORT, HOST, (err: any) => {
+    if (err) {
+        console.log(err);
+    }
+    console.log(`Listening at http://${HOST}:${PORT}`);
 });
+
+(async () => await new TweetStore().init())();
 
 const got = require('got');
 setInterval(function() {
@@ -50,24 +54,18 @@ cron.schedule("* * * * *", async () => {
     const tweetStore: TweetStore = new TweetStore();
 
     const result = await tweetStore.getTweets();
-    console.log("Result:", !!result)
     // @ts-ignore
     const tweets: ITweet[] = result.rows;
     console.log("Tweets:", tweets);
     // @ts-ignore
     let tweetsToPost = tweets.filter(t => {
         const postAt: Date = new Date(t.postat);
-        console.log(postAt);
         const dateNow: Date = new Date(Date.now());
-        console.log(dateNow)
-        // @ts-ignore
-        const diff = dateNow - postAt;
-        console.log(diff)
-        const minutes = diff/1000/60;
-        console.log(minutes)
+        const minutes: number = getMinutesBetweenDates(postAt, dateNow);
+        
         if (minutes > 0) return t;
     })
-    console.log("TTP:", tweetsToPost);
+
     if (!tweetsToPost) return;
 
     for (const tweetToPost of tweetsToPost) {
@@ -77,3 +75,8 @@ cron.schedule("* * * * *", async () => {
         await tweetStore.deleteTweet(tweetToPost.id);
     }
 });
+
+function getMinutesBetweenDates(date1: Date, date2: Date): number {
+    const diff = date2.getTime() - date1.getTime();
+    return diff / (1000 * 60);
+}
