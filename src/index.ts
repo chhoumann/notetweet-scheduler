@@ -43,9 +43,15 @@ app.listen(PORT, HOST, (err: any) => {
 
 (async () => await new TweetStore().init())();
 
+function getOrigin(): string {
+    return (process.env.ORIGIN || `http://${HOST}:${PORT}`);
+}
+
+console.log("Origin: ", getOrigin());
+
 const got = require('got');
 setInterval(function() {
-    got.get(process.env.ORIGIN);
+    got.get(getOrigin());
 }, 300000); // Prevent the app from sleeping.
 
 cron.schedule("* * * * *", async () => {

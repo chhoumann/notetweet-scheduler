@@ -1,0 +1,13 @@
+{
+  "name": "NoteTweet Scheduler",
+  "description": "A barebones Twitter scheduler, integrating with the NoteTweet plugin for Obsidian.",
+  "repository": "https://github.com/chhoumann/notetweet_obsidian",
+  "addons": ["heroku-postgresql:hobby-dev"],
+  "env": {
+      "ACCESS_SECRET": "SET_ME",
+      "ACCESS_TOKEN": "SET_ME",
+      "API_KEY": "SET_ME",
+      "API_SECRET": "SET_ME",
+      "PASSWORD": "SET_ME"
+  }
+}
