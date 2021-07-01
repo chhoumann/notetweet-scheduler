@@ -42,24 +42,18 @@ router.delete('/deleteScheduled', async (req: Request, res: Response) => {
 
 router.post('/updateTweet', async (req: Request, res: Response) => {
     if (!auth(req, res)) return;
-    console.log(1);
-    
 
     const {tweet, postAt} = req.body;
-    console.log(2);
     
     if (!tweet) {
         res.send({success: false, error: "tweet invalid"});
         return;
     }
-    console.log(3);
     
 
     const newTweet: ITweet = new Tweet(tweet.id, tweet.content, new Date(postAt));
-    console.log(4, newTweet);
     
     await new TweetStore().updateTweet(newTweet.id, newTweet);
-    console.log(5);
     
     console.log(`Updated Tweet {${newTweet.id}}`);
     res.send({success: true});
