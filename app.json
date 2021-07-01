@@ -8,6 +8,7 @@
       "ACCESS_TOKEN": "SET_ME",
       "API_KEY": "SET_ME",
       "API_SECRET": "SET_ME",
-      "PASSWORD": "SET_ME"
+      "PASSWORD": "SET_ME",
+      "ORIGIN": "SET_ME"
   }
 }
