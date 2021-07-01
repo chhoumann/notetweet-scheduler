@@ -36,13 +36,13 @@ app.listen(port, (err: any) => {
     if (err) {
         console.log(err);
     }
-    console.log(`Listening at http://${HOST}:${PORT}`);
+    console.log(`Listening at ${getOrigin} on port ${port}`);
 });
 
 (async () => await new TweetStore().init())();
 
 function getOrigin(): string {
-    return (process.env.ORIGIN || `http://${HOST}:${PORT}`);
+    return (process.env.ORIGIN || `http://localhost:${port}`);
 }
 
 console.log("Origin: ", getOrigin());
