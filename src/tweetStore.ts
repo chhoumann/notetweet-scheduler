@@ -20,7 +20,9 @@ export class TweetStore {
     }
 
     public async updateTweet(tweetId: string, newData: ITweet): Promise<ITweet> {
-        await db.query(`UPDATE public.tweets SET content = $1 SET poston = $2 WHERE id = $3;`, [newData.content, newData.postat, tweetId])
+        console.log("Trying to update.", newData);
+        
+        await db.query(`UPDATE public.tweets SET content = $1, poston = $2 WHERE id = $3;`, [newData.content, newData.postat, tweetId])
         return newData;
     }
 }
