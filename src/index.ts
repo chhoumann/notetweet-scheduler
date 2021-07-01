@@ -14,9 +14,6 @@ const tweetRoutes = require('./tweetRoutes')
 const middlewares = require('./middlewares');
 require('dotenv').config();
 
-const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || 'localhost';
-
 const app = express();
 app.use(morgan('common'));
 app.use(helmet());
@@ -34,7 +31,8 @@ app.get('/', (req: Request, res: Response) => {
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
 
-app.listen(PORT, HOST, (err: any) => {
+const port = process.env.PORT || 2020;
+app.listen(port, (err: any) => {
     if (err) {
         console.log(err);
     }
