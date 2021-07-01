@@ -9,21 +9,6 @@ const autoTweetApi = require('./autoTweet.js');
 const router = new Router();
 module.exports = router;
 
-router.post('/postTweetNow', async (req: Request, res: Response) => {
-    if (!auth(req, res)) return;
-
-    const {tweet} = req.body;
-    if (!tweet) {
-        res.send({success: false, error: "date or tweet invalid"});
-        return;
-    }
-
-    const newTweet: ITweet = new Tweet(tweet.id, tweet.content, new Date(Date.now()));
-    await autoTweetApi.TweetHandler(newTweet);
-
-    res.send({success: true});
-});
-
 router.post("/scheduleTweet", async (req: Request, res: Response) => {
     if (!auth(req, res)) return;
 
