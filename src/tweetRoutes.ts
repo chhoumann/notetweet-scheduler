@@ -25,7 +25,6 @@ router.post('/postTweetNow', async (req: Request, res: Response) => {
 });
 
 router.post("/scheduleTweet", async (req: Request, res: Response) => {
-    console.log(req.body);
     if (!auth(req, res)) return;
 
     const {tweet, postAt} = req.body;
@@ -36,7 +35,6 @@ router.post("/scheduleTweet", async (req: Request, res: Response) => {
 
     const newTweet: ITweet = new Tweet(tweet.id, tweet.content, new Date(postAt));
     await new TweetStore().addTweet(newTweet, postAt);
-    console.log(newTweet);
 
     console.log(`Scheduling {${newTweet.content}}`);
     res.send({success: true});
@@ -54,6 +52,22 @@ router.delete('/deleteScheduled', async (req: Request, res: Response) => {
     const {tweet} = req.body;
 
     await new TweetStore().deleteTweet(tweet.id);
+    res.send({success: true});
+});
+
+router.post('/updateTweet', async (req: Request, res: Response) => {
+    if (!auth(req, res)) return;
+
+    const {tweet, postAt} = req.body;
+    if (!tweet) {
+        res.send({success: false, error: "tweet invalid"});
+        return;
+    }
+
+    const newTweet: ITweet = new Tweet(tweet.id, tweet.content, new Date(postAt));
+    await new TweetStore().updateTweet(newTweet.id, newTweet);
+
+    console.log(`Updated Tweet {${newTweet.id}}`);
     res.send({success: true});
 });
 
