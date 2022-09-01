@@ -4,7 +4,9 @@ const db = require('./db');
 
 export class TweetStore {
     public async init(): Promise<void> {
-        await db.query("CREATE TABLE tweets(id text primary key, content text[], postat timestamp);");
+        try {
+            await db.query("CREATE TABLE tweets(id text primary key, content text[], postat timestamp);");
+        } catch (error) { }
     }
 
     public async getTweets(): Promise<ITweet[]> {
